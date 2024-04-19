@@ -67,6 +67,8 @@ app.get("/collectibles/:index", (req, res)=>{
     })
     if(indexItemExists === true){
         res.send(`So, you want the ${collectibleItem}? For ${collectiblePrice} it can be yours!`)
+    }else if(isNaN(indexNumber)){
+        res.send(`Please type a valid number`)
     }else{
         res.send(`This item is not yet in stock. Check back soon!`)
     }
