@@ -32,7 +32,7 @@ app.get("/roll/:number", (req, res)=>{
         res.send(`<h1>You must specify a valid number</h1>`);
         console.log("not a valid number")
     }else{
-        let randomInt = Math.floor(Math.random() * number) + 1;
+        let randomInt = Math.floor(Math.random() * number);
         res.send(`<h1>You rolled a ${randomInt}</h1>`);
         console.log("valid number")
     }
@@ -45,16 +45,41 @@ const collectibles = [
     { name: 'vintage 1970s yogurt SOLD AS-IS', price: 0.99 }
   ];
 
+// app.get("/collectibles/:index", (req, res)=>{
+//     const indexNumber = req.params.index;
+//     if(index === "0" || index === "1" || index === "2"){
+//         res.send(`<h1>So, you want the ${collectibles[index].name}? For ${collectibles[index].price} it can be yours!</h1>`);
+//         // console.log(collectibles[index]);
+//     }else{
+//         res.send(`<h1>This item is not yet in stock. Check back soon!</h1>`);
+//         // console.log(index);
+//     }
+// })
+
 app.get("/collectibles/:index", (req, res)=>{
-    const index = req.params.index;
-    if(index === "0" || index === "1" || index === "2"){
-        res.send(`<h1>So, you want the ${collectibles[index].name}? For ${collectibles[index].price} it can be yours!</h1>`);
-        // console.log(collectibles[index]);
+    const indexNumber = parseInt(req.params.index); //Value that comes from the request in the URL is a string data type, so using parseInt to 
+    let collectibleItem;
+    let collectiblePrice;
+    const indexItemExists = collectibles.some((collectible, index)=>{
+        collectibleItem = collectibles[index].name;
+        collectiblePrice = collectibles[index].price;
+        return indexNumber === index
+    })
+    if(indexItemExists === true){
+        res.send(`So, you want the ${collectibleItem}? For ${collectiblePrice} it can be yours!`)
     }else{
-        res.send(`<h1>This item is not yet in stock. Check back soon!</h1>`);
-        // console.log(index);
+        res.send(`This item is not yet in stock. Check back soon!`)
     }
 })
+
+
+
+
+
+
+
+
+
 
 //Using Query Parameters
 //4.Filter Shoes by Query Parameters
@@ -74,14 +99,34 @@ const shoes = [
     // No parameters: responds with the full list of shoes
 
 app.get("/shoes", (req, res)=>{
-    const minPrice = req.query.price;
-    if(minPrice <= 100){
-        console.log(minPrice);
-        res.send(`<h1>Please indicate shoes higher than $100</h1>`)
+    const minPrice = req.query.minprice;
+    const maxPrice = req.query.maxprice;
+    const type = req.query.type;
+    if(minPrice > 49 && maxPrice < 500 && type === "heel"){
+        console.log(minPrice, maxPrice, type)
+        res.send(`Here is your shoe: ${shoes[6].name}`)
     }else{
-        res.send(`<h1>Shoes available: ${shoes[1].name}, ${shoes[2].name}, ${shoes[5].name}, and ${shoes[6].name}</h1>`);
-        //Try array iterator methods to make strings out of the names in shoes array
+        res.send(`Here is the entire list of shoes: ${shoes[0].name}, ${shoes[1].name}, ${shoes[2].name}, ${shoes[3].name}, ${shoes[4].name}, ${shoes[5].name}, ${shoes[6].name}`)
     }
 })
 
 
+
+//Feedback: I tried using array iterator methods to create more dynamic conditions - not sure how we should have completed this lab (hard coding min, max, type values or a more dynamic approach)
+    //I tried to use array iterator methods to be more dyanmic and was able to do it: FEEDBACK please on the practicality of being dynamic vs. hard coding the values
+
+    // app.get("/shoes", (req, res)=>{
+//     const minPrice = parseInt(req.query.minprice);
+//     const maxPrice = parseInt(req.query.maxprice);
+//     const type = req.query.type;
+//     let shoeItem;//Declare variable to store shoe name, so we can send to client
+//     let objectprice = shoes.some((shoe)=>{
+//         shoeItem = shoe.name //Store name of shoe from the array, should thhe conditions evaluate to TRUE 
+//         return shoe.price > minPrice && shoe.price < maxPrice && shoe.type === type;
+//     })
+//     if(objectprice){
+//         res.send(`Shoe exists: ${shoeItem}`)
+//     }else{
+//         res.send(`Shoe DOES NOT exists`)
+//     }
+// })
