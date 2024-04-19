@@ -74,7 +74,14 @@ const shoes = [
     // No parameters: responds with the full list of shoes
 
 app.get("/shoes", (req, res)=>{
-
+    const minPrice = req.query.price;
+    if(minPrice <= 100){
+        console.log(minPrice);
+        res.send(`<h1>Please indicate shoes higher than $100</h1>`)
+    }else{
+        res.send(`<h1>Shoes available: ${shoes[1].name}, ${shoes[2].name}, ${shoes[5].name}, and ${shoes[6].name}</h1>`);
+        //Try array iterator methods to make strings out of the names in shoes array
+    }
 })
 
 
