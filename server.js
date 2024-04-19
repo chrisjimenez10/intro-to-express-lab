@@ -57,7 +57,7 @@ const collectibles = [
 // })
 
 app.get("/collectibles/:index", (req, res)=>{
-    const indexNumber = parseInt(req.params.index); //Value that comes from the request in the URL is a string data type, so using parseInt to 
+    const indexNumber = parseInt(req.params.index); //Value that comes from the request in the URL is a string data type, so using parseInt to
     let collectibleItem;
     let collectiblePrice;
     const indexItemExists = collectibles.some((collectible, index)=>{
