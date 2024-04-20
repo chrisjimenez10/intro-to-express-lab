@@ -57,7 +57,7 @@ const collectibles = [
 // })
 
 app.get("/collectibles/:index", (req, res)=>{
-    const indexNumber = parseInt(req.params.index); //Value that comes from the request in the URL is a string data type, so using parseInt to 
+    const indexNumber = parseInt(req.params.index); //Value that comes from the request in the URL is a string data type, so using parseInt to convert to number data type
     let collectibleItem;
     let collectiblePrice;
     const indexItemExists = collectibles.some((collectible, index)=>{
@@ -74,15 +74,6 @@ app.get("/collectibles/:index", (req, res)=>{
     }
 })
 
-
-
-
-
-
-
-
-
-
 //Using Query Parameters
 //4.Filter Shoes by Query Parameters
 const shoes = [
@@ -94,6 +85,7 @@ const shoes = [
     { name: "Jet Boots", price: 1000, type: "boot" },
     { name: "Fifty-Inch Heels", price: 175, type: "heel" }
 ];
+
 //Query Parameters:
     // min-price: excludes shoes below this price
     // max-price: excludes sheos above this price
@@ -111,8 +103,6 @@ app.get("/shoes", (req, res)=>{
         res.send(`Here is the entire list of shoes: ${shoes[0].name}, ${shoes[1].name}, ${shoes[2].name}, ${shoes[3].name}, ${shoes[4].name}, ${shoes[5].name}, ${shoes[6].name}`)
     }
 })
-
-
 
 //Feedback: I tried using array iterator methods to create more dynamic conditions - not sure how we should have completed this lab (hard coding min, max, type values or a more dynamic approach)
     //I tried to use array iterator methods to be more dyanmic and was able to do it: FEEDBACK please on the practicality of being dynamic vs. hard coding the values
