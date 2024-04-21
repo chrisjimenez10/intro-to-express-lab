@@ -109,7 +109,7 @@ app.get("/shoes", (req, res)=>{
 //Feedback: I tried using array iterator methods to create more dynamic conditions - not sure how we should have completed this lab (hard coding min, max, type values or a more dynamic approach)
     //I tried to use array iterator methods to be more dyanmic and was able to do it: FEEDBACK please on the practicality of being dynamic vs. hard coding the values
 
-    // app.get("/shoes", (req, res)=>{
+//     app.get("/shoes", (req, res)=>{
 //     const minPrice = parseInt(req.query.minprice);
 //     const maxPrice = parseInt(req.query.maxprice);
 //     const type = req.query.type;
