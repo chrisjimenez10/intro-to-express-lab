@@ -123,30 +123,48 @@ const shoes = [
 //         res.send(`Shoe DOES NOT exists`)
 //     }
 // })
-    app.get("/shoes", (req, res)=>{
+//     app.get("/shoes", (req, res)=>{
+//     const minPrice = parseInt(req.query.minprice);
+//     const maxPrice = parseInt(req.query.maxprice);
+//     const type = req.query.type;
+//     // let shoeArray = []; //I initailly pushed the elements that met the if... condition and used res.send() to send to client - but it displayed the names in array format
+//     //let shoeItem;//Declare variable to store shoe name, so we can send to client
+//     // let objectprice = shoes.some((shoe)=>{
+//     //     shoeItem = shoe.name //Store name of shoe from the array, should thhe conditions evaluate to TRUE 
+//     //     return shoe.price > minPrice && shoe.price < maxPrice && shoe.type === type;
+//     // })
+//     shoes.forEach((shoe)=>{
+//         if(shoe.price > minPrice && shoe.price < maxPrice && shoe.type === type){
+//             // shoeArray.push(shoe.name)
+//             res.write(`<h1>${shoe.name}</h1>`) //Asked Chat GPT array methods I can use to send elements in an array to the client using the respond object and I learned about the write() method - It allows us to send CHUNK of data in smaller chunks or when streaming data (so it went from array chunk, to smaller individual value chunks(individual strings)
+//             console.log(shoe)
+//         }
+//     })
+//     res.end(); //Need to use this method to ensure the response ENDS/Terminates and can send all the values to the client (it loads infinitely and won't send the response if we don't have this res.end()) - learned that using res.end() depends on use case, but in this case when we're iterating over an array and sending mulitple small chunks of data, it's appropriate to terminate the response so it can send it to the client (otherwise it will keep waiting on events to respond to)
+    
+//     // if(objectprice){
+//     //     res.send(`Shoe exists: ${shoeItem}`)
+//     // }else{
+//     //     res.send(`Shoe DOES NOT exists`)
+//     // }
+// })
+
+app.get("/shoes", (req, res)=>{
     const minPrice = parseInt(req.query.minprice);
     const maxPrice = parseInt(req.query.maxprice);
     const type = req.query.type;
-    // let shoeArray = []; //I initailly pushed the elements that met the if... condition and used res.send() to send to client - but it displayed the names in array format
-    //let shoeItem;//Declare variable to store shoe name, so we can send to client
-    // let objectprice = shoes.some((shoe)=>{
-    //     shoeItem = shoe.name //Store name of shoe from the array, should thhe conditions evaluate to TRUE 
-    //     return shoe.price > minPrice && shoe.price < maxPrice && shoe.type === type;
-    // })
-    shoes.forEach((shoe)=>{
-        if(shoe.price > minPrice && shoe.price < maxPrice && shoe.type === type){
-            // shoeArray.push(shoe.name)
-            res.write(`<h1>${shoe.name}</h1>`) //Asked Chat GPT array methods I can use to send elements in an array to the client using the respond object and I learned about the write() method - It allows us to send CHUNK of data in smaller chunks or when streaming data (so it went from array chunk, to smaller individual value chunks(individual strings)
-            console.log(shoe)
-        }else{
+    if (!isNaN(minPrice) && !isNaN(maxPrice) && type){ //Using bang operator on isNaN() for the query values because parseInt CAN return NaN if the user provided characters that cannot be converted to a valid number
+        let shoesArray = shoes.filter((shoe)=>{
+        return shoe.price > minPrice && shoe.price < maxPrice && shoe.type === type   
+        })
+        shoesArray.forEach((shoe)=>{
             res.write(`<h1>${shoe.name}</h1>`)
-        }
-    })
-    res.end(); //Need to use this method to ensure the response ENDS/Terminates and can send all the values to the client (it loads infinitely and won't send the response if we don't have this res.end()) - learned that using res.end() depends on use case, but in this case when we're iterating over an array and sending mulitple small chunks of data, it's appropriate to terminate the response so it can send it to the client (otherwise it will keep waiting on events to respond to)
-    
-    // if(objectprice){
-    //     res.send(`Shoe exists: ${shoeItem}`)
-    // }else{
-    //     res.send(`Shoe DOES NOT exists`)
-    // }
+        })
+    }else{ //I was having an issue in the preivous attempt of using an else statement where the first and second condition code expressions where being executed: Looked up on chat gpt why that was the case using the write() method and learned that I was sending html content to the client with a single forEach() - I had to create the filtered array that matched the conditions we are looking for and then iterate over that new filtered array with a forEach to access the shoe name
+        shoes.forEach((shoe)=>{ //Then, for the else statement I needed another SEPARATE forEach() to iterate over the original array to display ALL shoe names if the strict condition in the if statement was not met
+            res.write(`<h1>${shoe.name}</h1>`)
+        })
+    }
+    res.end();
 })
+
