@@ -92,33 +92,43 @@ const shoes = [
     // type: shows only shoes of the specified type
     // No parameters: responds with the full list of shoes
 
-app.get("/shoes", (req, res)=>{
-    const minPrice = req.query.minprice;
-    const maxPrice = req.query.maxprice;
-    const type = req.query.type;
-    if(minPrice > 49 && maxPrice < 500 && type === "heel"){
-        console.log(minPrice, maxPrice, type)
-        res.send(`Here is your shoe: ${shoes[6].name}`)
-    }else{
-        res.send(`Here is the entire list of shoes: ${shoes[0].name}, ${shoes[1].name}, ${shoes[2].name}, ${shoes[3].name}, ${shoes[4].name}, ${shoes[5].name}, ${shoes[6].name}`)
-    }
-})
+// app.get("/shoes", (req, res)=>{
+//     const minPrice = req.query.minprice;
+//     const maxPrice = req.query.maxprice;
+//     const type = req.query.type;
+//     if(minPrice > 49 && maxPrice < 500 && type === "heel"){
+//         console.log(minPrice, maxPrice, type)
+//         res.send(`Here is your shoe: ${shoes[6].name}`)
+//     }else{
+//         res.send(`Here is the entire list of shoes: ${shoes[0].name}, ${shoes[1].name}, ${shoes[2].name}, ${shoes[3].name}, ${shoes[4].name}, ${shoes[5].name}, ${shoes[6].name}`)
+//     }
+// })
 
 //Feedback: I tried using array iterator methods to create more dynamic conditions - not sure how we should have completed this lab (hard coding min, max, type values or a more dynamic approach)
     //I tried to use array iterator methods to be more dyanmic and was able to do it: FEEDBACK please on the practicality of being dynamic vs. hard coding the values
 
-    // app.get("/shoes", (req, res)=>{
-//     const minPrice = parseInt(req.query.minprice);
-//     const maxPrice = parseInt(req.query.maxprice);
-//     const type = req.query.type;
-//     let shoeItem;//Declare variable to store shoe name, so we can send to client
-//     let objectprice = shoes.some((shoe)=>{
-//         shoeItem = shoe.name //Store name of shoe from the array, should thhe conditions evaluate to TRUE 
-//         return shoe.price > minPrice && shoe.price < maxPrice && shoe.type === type;
-//     })
-//     if(objectprice){
-//         res.send(`Shoe exists: ${shoeItem}`)
-//     }else{
-//         res.send(`Shoe DOES NOT exists`)
-//     }
-// })
+    app.get("/shoes", (req, res)=>{
+    const minPrice = parseInt(req.query.minprice);
+    const maxPrice = parseInt(req.query.maxprice);
+    const type = req.query.type;
+    // let shoeArray = []; //I initailly pushed the elements that met the if... condition and used res.send() to send to client - but it displayed the names in array format
+    //let shoeItem;//Declare variable to store shoe name, so we can send to client
+    // let objectprice = shoes.some((shoe)=>{
+    //     shoeItem = shoe.name //Store name of shoe from the array, should thhe conditions evaluate to TRUE 
+    //     return shoe.price > minPrice && shoe.price < maxPrice && shoe.type === type;
+    // })
+    shoes.forEach((shoe)=>{
+        if(shoe.price > minPrice && shoe.price < maxPrice && shoe.type === type){
+            // shoeArray.push(shoe.name)
+            res.write(`<h1>${shoe.name}</h1>`) //Asked Chat GPT array methods I can use to send elements in an array to the client using the respond object and I learned about the write() method - It allows us to send CHUNK of data in smaller chunks or when streaming data (so it went from array chunk, to smaller individual value chunks(individual strings)
+            console.log(shoe)
+        }
+    })
+    res.end(); //Need to use this method to ensure the response ENDS/Terminates and can send all the values to the client (it loads infinitely and won't send the response if we don't have this res.end()) - learned that using res.end() depends on use case, but in this case when we're iterating over an array and sending mulitple small chunks of data, it's appropriate to terminate the response so it can send it to the client (otherwise it will keep waiting on events to respond to)
+    
+    // if(objectprice){
+    //     res.send(`Shoe exists: ${shoeItem}`)
+    // }else{
+    //     res.send(`Shoe DOES NOT exists`)
+    // }
+})
